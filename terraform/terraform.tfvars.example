@@ -1,0 +1,6 @@
+location             = "East US"
+prefix               = "stackapps"
+vm_size              = "Standard_B2s"
+admin_username       = "azureuser"
+admin_ssh_public_key = "ssh-rsa AAAA..."
+allowed_ssh_cidr     = "203.0.113.10/32"
