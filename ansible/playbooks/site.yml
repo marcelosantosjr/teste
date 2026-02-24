@@ -1,0 +1,6 @@
+- name: Provisionar VM e aplicações
+  hosts: app
+  become: true
+  roles:
+    - common
+    - apps

@@ -1,0 +1,13 @@
+app_base_dir: /opt/stack-apps
+n8n_port: 5678
+evolution_port: 8080
+chatwoot_port: 3000
+
+n8n_image: docker.n8n.io/n8nio/n8n:latest
+evolution_image: atendai/evolution-api:latest
+chatwoot_image: chatwoot/chatwoot:latest
+postgres_image: postgres:15
+redis_image: redis:7
+
+chatwoot_secret_key_base: "change_me_secret"
+chatwoot_frontend_url: "http://localhost:3000"

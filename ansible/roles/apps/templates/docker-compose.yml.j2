@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: {{ postgres_image }}
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: chatwoot_production
+      POSTGRES_USER: chatwoot
+      POSTGRES_PASSWORD: chatwoot
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: {{ redis_image }}
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  n8n:
+    image: {{ n8n_image }}
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "{{ n8n_port }}:5678"
+    environment:
+      N8N_HOST: 0.0.0.0
+      N8N_PORT: 5678
+      WEBHOOK_URL: http://localhost:{{ n8n_port }}
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  evolution:
+    image: {{ evolution_image }}
+    container_name: evolution-api
+    restart: unless-stopped
+    ports:
+      - "{{ evolution_port }}:8080"
+    environment:
+      SERVER_PORT: 8080
+
+  chatwoot:
+    image: {{ chatwoot_image }}
+    container_name: chatwoot
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "{{ chatwoot_port }}:3000"
+    environment:
+      RAILS_ENV: production
+      NODE_ENV: production
+      INSTALLATION_ENV: docker
+      SECRET_KEY_BASE: {{ chatwoot_secret_key_base }}
+      FRONTEND_URL: {{ chatwoot_frontend_url }}
+      REDIS_URL: redis://redis:6379
+      POSTGRES_HOST: postgres
+      POSTGRES_USERNAME: chatwoot
+      POSTGRES_PASSWORD: chatwoot
+      POSTGRES_DATABASE: chatwoot_production
+
+
+volumes:
+  postgres_data:
+  redis_data:
+  n8n_data:
